@@ -1,0 +1,18 @@
+.content {
+  composes: content from "../string/string.module.css";
+  align-items: center;
+  flex-wrap: wrap;
+}
+.frame {
+  composes: frame from "../string/string.module.css";
+  min-width: 205px;
+}
+.massive {
+  margin-left: 68px;
+}
+.radio1 {
+  margin-right: 40px;
+}
+.radio2 {
+  margin-right: 52px;
+}

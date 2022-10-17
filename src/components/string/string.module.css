@@ -1,0 +1,10 @@
+.content {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+.frame {
+  order: 0;
+  max-width: 377px;
+  margin-right: 12px;
+}

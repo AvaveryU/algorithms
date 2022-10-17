@@ -1,0 +1,6 @@
+.content {
+  composes: content from "../string/string.module.css";
+}
+.frame {
+  composes: frame from "../string/string.module.css";
+}
