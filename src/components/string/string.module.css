@@ -8,3 +8,12 @@
   max-width: 377px;
   margin-right: 12px;
 }
+.circle {
+  margin-top: 120px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 80px);
+  grid-template-rows: auto-fit;
+  column-gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
