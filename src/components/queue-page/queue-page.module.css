@@ -1,0 +1,12 @@
+.content {
+  composes: content from "../stack-page/stack-page.module.css";
+}
+.frame {
+  composes: frame from "../stack-page/stack-page.module.css";
+}
+.button {
+  composes: button from "../stack-page/stack-page.module.css";
+}
+.clear {
+  composes: clear from "../stack-page/stack-page.module.css";
+}

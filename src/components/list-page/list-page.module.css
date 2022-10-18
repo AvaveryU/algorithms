@@ -1,0 +1,22 @@
+.content {
+  display: grid;
+  grid-template-columns: repeat(5, min-content);
+  grid-template-rows: repeat(2, auto-fit);
+  gap: 12px;
+  justify-content: center;
+}
+.frame {
+  order: 0;
+  min-width: 204px;
+}
+.button {
+  max-width: 175px;
+}
+.button__first {
+  grid-column-start: 2;
+  grid-column-end: 4;
+}
+.button__second {
+  grid-column-start: 4;
+  grid-column-end: 6;
+}

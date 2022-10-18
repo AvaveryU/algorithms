@@ -9,7 +9,7 @@
   padding: 18px 24px 19px 24px;
   transition: var(--common-transition);
   max-height: 60px;
-  min-width: 130px;
+  /* min-width: 130px; */
 }
 
 .button:hover:enabled {
