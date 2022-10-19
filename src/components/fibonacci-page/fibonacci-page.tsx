@@ -15,23 +15,7 @@ export const FibonacciPage: React.FC = () => {
     setInputString(event.target.value);
   };
   const massiv = inputString.split(""); //из строки делаем массив
-  const onExpand = () => {
-    setFlag(true);
-    let start = 0;
-    let end = massiv.length - 1;
-    let arr: number[] = [];
-    setChange(ElementStates.Default);
-    for (let i = start; i < end; i++) {
-      //arr = swap(massiv, start, end);
-      start++;
-      end--;
-      setChange(ElementStates.Changing);
-      setMassivLetter(arr);
-    }
-    setChange(ElementStates.Modified);
-    setInputString(""); //очищаем инпут
-    setFlag(false);
-  };
+
   const fib = (n: number, memo: Record<number, number> = {}): number => {
     if (n in memo) {
       return memo[n];
@@ -58,7 +42,7 @@ export const FibonacciPage: React.FC = () => {
         <Button
           text="Рассчитать"
           linkedList="small"
-          onClick={onExpand}
+          //onClick={onExpand}
           disabled={inputString !== null ? false : true}
           isLoader={!flag ? false : true}
         />
