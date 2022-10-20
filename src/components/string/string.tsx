@@ -78,7 +78,7 @@ export const StringComponent: React.FC = () => {
       </div>
       <div className={styles.circle}>
         {massivLetter &&
-          massivLetter.map((item, index: number) => {
+          massivLetter.map((item, index) => {
             return <Circle letter={item.letter} key={index} state={item.color} />;
           })}
       </div>
