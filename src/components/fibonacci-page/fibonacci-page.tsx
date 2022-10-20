@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEventHandler, useState } from "react";
 import { ElementStates } from "../../types/element-states";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
@@ -7,26 +7,32 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./fibonacci-page.module.css";
 
 export const FibonacciPage: React.FC = () => {
-  const [inputString, setInputString] = useState<string>("");
+  const [inputValue, setInputValue] = useState<number>();
   const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки
-  const [massivLetter, setMassivLetter] = useState<number[]>();
-  const [change, setChange] = useState<any>();
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputString(event.target.value);
-  };
-  const massiv = inputString.split(""); //из строки делаем массив
+  const [numberValue, setnumberValue] = useState<any>();
 
-  const fib = (n: number, memo: Record<number, number> = {}): number => {
-    if (n in memo) {
-      return memo[n];
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(Number(event.currentTarget.value));
+  };
+
+  const fib = (n: any, memo: Record<number, number> = {}): number => {
+    let num = Number(n);
+
+    if (num in memo) {
+      setnumberValue(memo[num]);
+      return memo[num];
     }
-    if (n <= 2) {
+    if (num <= 2) {
       return 1;
     }
-    memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
-    return memo[n];
+    memo[num] = fib(num - 1, memo) + fib(num - 2, memo);
+    setnumberValue(memo[num]);
+    console.log(memo[num]);
+    return memo[num];
   };
-  console.log(fib(6));
+  const onExpand = () => {
+    fib(inputValue);
+  };
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
       <div className={styles.content}>
@@ -36,20 +42,20 @@ export const FibonacciPage: React.FC = () => {
           extraClass={styles.frame}
           maxLength={19}
           onChange={handleChange}
-          value={inputString}
+          value={inputValue}
           isLimitText
         />
         <Button
           text="Рассчитать"
           linkedList="small"
-          //onClick={onExpand}
-          disabled={inputString !== null ? false : true}
+          onClick={onExpand}
+          disabled={inputValue !== undefined ? false : true}
           isLoader={!flag ? false : true}
         />
       </div>
       <div className={styles.circle}>
-        {massivLetter?.map((letter: number, index: number) => {
-          return <Circle letter={`${letter}`} key={index} state={change} />;
+        {numberValue?.map((item: any, index: number) => {
+          return <Circle letter={`${item}`} key={index} />;
         })}
       </div>
     </SolutionLayout>
