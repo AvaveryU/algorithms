@@ -1,5 +1,5 @@
-import React, { FormEventHandler, useState } from "react";
-import { ElementStates } from "../../types/element-states";
+import React, { useState } from "react";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
@@ -7,32 +7,40 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./fibonacci-page.module.css";
 
 export const FibonacciPage: React.FC = () => {
-  const [inputValue, setInputValue] = useState<number>();
+  const [inputNumber, setInputNumber] = useState<number>();
   const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки
-  const [numberValue, setnumberValue] = useState<any>();
+  const [massivItem, setMassivItem] = useState<number[]>();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(Number(event.currentTarget.value));
+    setInputNumber(Number(event.currentTarget.value));
   };
-
-  const fib = (n: any, memo: Record<number, number> = {}): number => {
-    let num = Number(n);
-
-    if (num in memo) {
-      setnumberValue(memo[num]);
-      return memo[num];
+  //функция для последовательности фибоначчи
+  const fib = (n: number, memo: Record<number, number> = {}): number => {
+    if (n in memo) {
+      return memo[n];
     }
-    if (num <= 2) {
+    if (n <= 2) {
       return 1;
     }
-    memo[num] = fib(num - 1, memo) + fib(num - 2, memo);
-    setnumberValue(memo[num]);
-    console.log(memo[num]);
-    return memo[num];
+    memo[n] = fib(n - 1, memo) + fib(n - 2, memo);
+    return memo[n];
   };
-  const onExpand = () => {
-    fib(inputValue);
+  //функция при клике на кнопку 'Развернуть'
+  const onExpand = async () => {
+    setFlag(true);
+    let start = 1;
+    let arr: number[] = [];
+
+    if (inputNumber !== undefined) {
+      for (let i = start; i <= inputNumber + 1; i++) {
+        await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+        arr.push(fib(i));
+        setMassivItem([...arr]);
+      }
+    }
+    setFlag(false);
   };
+
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
       <div className={styles.content}>
@@ -42,20 +50,20 @@ export const FibonacciPage: React.FC = () => {
           extraClass={styles.frame}
           maxLength={19}
           onChange={handleChange}
-          value={inputValue}
+          value={inputNumber || ""}
           isLimitText
         />
         <Button
           text="Рассчитать"
           linkedList="small"
           onClick={onExpand}
-          disabled={inputValue !== undefined ? false : true}
+          disabled={inputNumber ? false : true}
           isLoader={!flag ? false : true}
         />
       </div>
       <div className={styles.circle}>
-        {numberValue?.map((item: any, index: number) => {
-          return <Circle letter={`${item}`} key={index} />;
+        {massivItem?.map((item, index) => {
+          return <Circle letter={`${item}`} key={index} tail={`${index}`} />;
         })}
       </div>
     </SolutionLayout>

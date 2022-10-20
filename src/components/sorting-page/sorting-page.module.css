@@ -16,3 +16,14 @@
 .radio2 {
   margin-right: 52px;
 }
+.circle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 48px;
+  gap: 10px;
+  min-height: 340px;
+}
+.column {
+  justify-content: flex-end;
+}
