@@ -14,3 +14,6 @@
   composes: button;
   margin-left: 80px;
 }
+.circle {
+  composes: circle from "../string/string.module.css";
+}
