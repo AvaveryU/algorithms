@@ -116,11 +116,7 @@ export const SortingPage: React.FC = () => {
   };
 
   const onChange = () => {
-    if (isChecked) {
-      setChecked(false);
-    } else {
-      setChecked(true);
-    }
+    isChecked ? setChecked(false) : setChecked(true);
   };
 
   return (

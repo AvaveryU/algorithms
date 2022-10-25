@@ -9,7 +9,7 @@ import styles from "./stack-page.module.css";
 
 export const StackPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<number | string>();
-  const [isDigit, setisDigit] = useState<{ digit: number | string; color: ElementStates }[]>([]);
+  const [isDigits, setDigits] = useState<{ digit: number | string; color: ElementStates }[]>([]);
   const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,10 +20,10 @@ export const StackPage: React.FC = () => {
     setFlag(true);
     setInputValue("");
     if (inputValue) {
-      isDigit.push({ digit: inputValue, color: ElementStates.Changing });
-      setisDigit([...isDigit]);
+      isDigits.push({ digit: inputValue, color: ElementStates.Changing });
+      setDigits([...isDigits]);
       await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-      isDigit[isDigit.length - 1].color = ElementStates.Default; // цвет последнего элемента в стэке
+      isDigits[isDigits.length - 1].color = ElementStates.Default; // цвет последнего элемента в стэке
     }
     setFlag(false);
   };
@@ -32,17 +32,14 @@ export const StackPage: React.FC = () => {
   const deleteElement = async () => {
     setFlag(true);
     setInputValue("");
-    isDigit[isDigit.length - 1].color = ElementStates.Changing; // цвет последнего элемента в стэке
+    isDigits[isDigits.length - 1].color = ElementStates.Changing; // цвет последнего элемента в стэке
     await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-    isDigit.pop();
-    setisDigit([...isDigit]);
+    isDigits.pop();
+    setDigits([...isDigits]);
     setFlag(false);
   };
   const resetElements = () => {
-    while (isDigit.length > 0) {
-      isDigit.pop();
-      setisDigit([...isDigit]);
-    }
+    setDigits([]);
   };
   return (
     <SolutionLayout title="Стек">
@@ -70,7 +67,7 @@ export const StackPage: React.FC = () => {
           extraClass={styles.button}
           onClick={deleteElement}
           isLoader={!flag ? false : true}
-          disabled={isDigit[0] ? false : true}
+          disabled={isDigits[0] ? false : true}
         />
         <Button
           text="Очистить"
@@ -78,19 +75,19 @@ export const StackPage: React.FC = () => {
           extraClass={styles.clear}
           onClick={resetElements}
           isLoader={!flag ? false : true}
-          disabled={isDigit[0] ? false : true}
+          disabled={isDigits[0] ? false : true}
         />
       </div>
       <div className={styles.circle}>
-        {isDigit &&
-          isDigit?.map((item, index) => {
+        {isDigits &&
+          isDigits?.map((item, index) => {
             return (
               <Circle
                 letter={`${item.digit}`}
                 key={index}
                 state={item.color}
                 index={index}
-                head={index === isDigit.length - 1 ? "top" : ""}
+                head={index === isDigits.length - 1 ? "top" : ""}
               />
             );
           })}

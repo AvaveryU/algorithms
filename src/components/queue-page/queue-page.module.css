@@ -10,3 +10,6 @@
 .clear {
   composes: clear from "../stack-page/stack-page.module.css";
 }
+.circle {
+  composes: circle from "../stack-page/stack-page.module.css";
+}
