@@ -67,6 +67,7 @@ export const SortingPage: React.FC = () => {
           await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
           swap(massiv, minInd, i, ElementStates.Changing);
         }
+        massiv[length - 1].color = ElementStates.Modified;
       }
       //если выбран метод сортировки ПУЗЫРЕК
       else {

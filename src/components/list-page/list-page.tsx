@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import React, { useState } from "react";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
@@ -10,16 +9,36 @@ import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { LinkedList } from "./list";
 import styles from "./list-page.module.css";
 
+type TPropItem = {
+  element: string | number;
+  color: ElementStates;
+  isHeadAdd?: boolean; //флаг добавления в начало списка
+  isTailAdd?: boolean; //флаг добавления в конец списка
+  isTailRemove?: boolean; //флаг удаления с начала списка
+  isHeadRemove?: boolean; //флаг удаления с конца списка
+  isElementAdd?: boolean; //флаг добавления элемента по индексу
+  isElementRemove?: boolean; //флаг удаления элемента по индексу
+  topCircle?:
+    | {
+        element: string;
+      }
+    | undefined; //флаг для визуала элемента сверху списка
+  bottomCircle?:
+    | {
+        element: string;
+      }
+    | undefined; //флаг для визуала элемента снизу списка
+};
+
 export const ListPage: React.FC = () => {
-  const id = nanoid();
   const [inputValue, setInputValue] = useState<string>("");
   const [inputIndex, setInputIndex] = useState<number>();
   const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки 1
   const [flagTwo, setFlagTwo] = useState<boolean>(false); //флаг для активной кнопки 2
   const [flagThree, setFlagThree] = useState<boolean>(false); //флаг для активной кнопки 3
   const [flagFour, setFlagFour] = useState<boolean>(false); //флаг для активной кнопки 4
+
   const list = new LinkedList<string>();
-  //const [isHeadAdd, setHeadAdd] = useState<boolean>(false);
 
   //функция рандомного массива
   const randomArr = () => {
@@ -32,18 +51,7 @@ export const ListPage: React.FC = () => {
     });
   };
   const initArray = randomArr();
-  const [isValues, setValues] = useState<
-    {
-      element: string | number;
-      color: ElementStates;
-      isHeadAdd?: boolean;
-      isTailAdd?: boolean;
-      isTailRemove?: boolean;
-      isHeadRemove?: boolean;
-      topCircle?: any;
-      bottomCircle?: any;
-    }[]
-  >(initArray);
+  const [isValues, setValues] = useState<TPropItem[]>(initArray);
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.placeholder === "Введите текст") {
@@ -56,7 +64,7 @@ export const ListPage: React.FC = () => {
   const addElement = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setInputValue("");
     const arr = [...isValues];
-    if (event.currentTarget.name === "head") {
+    if (event.currentTarget?.name === "head") {
       setFlag(true);
       list.insertAt(inputValue, 0); // добавление элемента в начало списка
       const head = list.getIndex(0);
@@ -75,7 +83,7 @@ export const ListPage: React.FC = () => {
       arr[0] = {
         ...arr[0],
         isHeadAdd: false,
-        topCircle: null,
+        topCircle: undefined,
       };
       //новый элемент в начале очереди
       arr.unshift({
@@ -88,7 +96,7 @@ export const ListPage: React.FC = () => {
       setFlag(false);
     }
     //если нажали на кнопку добавить в tail
-    else if (event.currentTarget.name === "tail") {
+    else if (event.currentTarget?.name === "tail") {
       setFlagTwo(true);
       let index = arr.length - 1;
       list.insertAt(inputValue, index); // добавление элемента в конец списка
@@ -108,19 +116,18 @@ export const ListPage: React.FC = () => {
       arr[index] = {
         ...arr[index],
         isTailAdd: false,
-        topCircle: null,
+        topCircle: undefined,
       };
       //новый элемент в начале очереди
       arr.push({
         element: tail ? tail : inputValue,
         color: ElementStates.Modified,
       });
-      setValues([...arr]);
       await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-      arr[index + 1].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
+      setValues([...arr]);
+      arr[arr.length - 1].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
       setFlagTwo(false);
     }
-    setInputValue("");
   };
 
   //функция при клике на кнопку 'Удалить'
@@ -128,7 +135,7 @@ export const ListPage: React.FC = () => {
     setInputValue("");
     const arr = [...isValues];
     //если удаляем начало списка
-    if (event.currentTarget.name === "headRemoved") {
+    if (event.currentTarget?.name === "headRemoved") {
       setFlagThree(true);
       list.print();
       //0ой элемент в списке
@@ -137,7 +144,7 @@ export const ListPage: React.FC = () => {
         element: "",
         isHeadRemove: true,
         bottomCircle: {
-          element: arr[0].element,
+          element: `${arr[0].element}`,
         },
       };
       setValues([...arr]);
@@ -146,18 +153,18 @@ export const ListPage: React.FC = () => {
       arr[0] = {
         ...arr[0],
         isHeadRemove: false,
-        bottomCircle: null,
+        bottomCircle: undefined,
       };
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
       //новый элемент в начале очереди
       arr.shift();
       setValues([...arr]);
-      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-      arr[0].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
       setFlagThree(false);
+      arr[0].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
     }
     //если удаляем конец списка
-    else if (event.currentTarget.name === "tailRemoved") {
-      setFlagThree(true);
+    else if (event.currentTarget?.name === "tailRemoved") {
+      setFlagFour(true);
       let index = arr.length - 1;
       list.print();
       //последний элемент в списке
@@ -166,7 +173,7 @@ export const ListPage: React.FC = () => {
         element: "",
         isTailRemove: true,
         bottomCircle: {
-          element: arr[index].element,
+          element: `${arr[index].element}`,
         },
       };
       setValues([...arr]);
@@ -175,51 +182,85 @@ export const ListPage: React.FC = () => {
       arr[index] = {
         ...arr[index],
         isTailRemove: false,
-        bottomCircle: null,
+        bottomCircle: undefined,
       };
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
       //новый элемент в конце очереди
       arr.pop();
       setValues([...arr]);
-      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-      arr[index + 1].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
-      setFlagThree(false);
+      setFlagFour(false);
+      arr[arr.length - 1].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
     }
     setValues([...arr]);
   };
 
   //функция при клике на кнопку 'Добавить по индексу'
-  const addElementIndex = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const setElementIndex = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    setInputIndex(Number(""));
     setInputValue("");
     const arr = [...isValues];
-    if (event.currentTarget.name === "addElementIndex") {
+    let start = 0;
+    list.print();
+    //если нажали добавить по индексу
+    if (event.currentTarget?.name === "addElementIndex" && inputIndex) {
       setFlagFour(true);
-      // list.insertAt(inputValue, 0); // добавление элемента в начало списка
-      const tail = list.getIndex(arr.length - 1);
-      //list.print();
-      //последний элемент в списке
-      arr[arr.length - 1] = {
-        ...arr[arr.length - 1],
-        isTailRemove: true,
-        topCircle: {
-          element: tail ? tail : inputValue,
-        },
-      };
-      setValues([...arr]);
-      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-      //указываем ключи для скрытия добавляемого элемента визуально (topCircle)
-      arr[arr.length - 1] = {
-        ...arr[arr.length - 1],
-        isTailRemove: false,
-        topCircle: null,
-      };
-      //новый элемент в начале очереди
-      arr.unshift({
-        element: tail ? tail : inputValue,
+      while (start <= inputIndex) {
+        // элемент в списке по индексу
+        arr[start] = {
+          ...arr[start],
+          isElementAdd: true,
+          topCircle: {
+            element: inputValue ? inputValue : "",
+          },
+        };
+        setValues([...arr]);
+        await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+        //указываем ключи для скрытия добавляемого элемента визуально (topCircle)
+        arr[start] = {
+          ...arr[start],
+          isElementAdd: false,
+          topCircle: undefined,
+        };
+        start++;
+      }
+      //новый элемент по индексу
+      arr.splice(inputIndex, 0, {
+        element: inputValue ? inputValue : "",
         color: ElementStates.Modified,
       });
       setValues([...arr]);
       await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-      arr[arr.length + 1].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
+      arr[inputIndex].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
+      setFlagFour(false);
+    }
+    //если нажали удаление по индексу
+    if (event.currentTarget?.name === "removeElementIndex" && inputIndex) {
+      setFlagFour(true);
+      list.print();
+      while (start <= inputIndex) {
+        // элемент в списке по индексу
+        arr[start] = {
+          ...arr[start],
+          isElementRemove: true,
+          bottomCircle: {
+            element: `${arr[inputIndex].element}`,
+          },
+          color: ElementStates.Changing,
+        };
+        setValues([...arr]);
+        await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+        //указываем ключи для скрытия добавляемого элемента визуально (topCircle)
+        arr[start] = {
+          ...arr[start],
+          isElementRemove: false,
+          bottomCircle: undefined,
+        };
+        start++;
+      }
+      //новый элемент по индексу
+      arr.splice(inputIndex, 1);
+      arr.forEach((item) => (item.color = ElementStates.Default)); // возвращаем всем элементам дефолтный цвет
+      setValues([...arr]);
       setFlagFour(false);
     }
     setValues([...arr]);
@@ -262,7 +303,7 @@ export const ListPage: React.FC = () => {
           name={"headRemoved"}
           onClick={(event) => deleteElement(event)}
           isLoader={!flagThree ? false : true}
-          //disabled={inputValue ? false : true}
+          disabled={isValues.length !== 0 ? false : true}
         />
         <Button
           text="Удалить из tail"
@@ -271,7 +312,7 @@ export const ListPage: React.FC = () => {
           name={"tailRemoved"}
           onClick={(event) => deleteElement(event)}
           isLoader={!flagFour ? false : true}
-          //disabled={inputValue ? false : true}
+          disabled={isValues.length !== 0 ? false : true}
         />
         <Input
           placeholder="Введите индекс"
@@ -287,13 +328,15 @@ export const ListPage: React.FC = () => {
           linkedList="big"
           extraClass={styles.button__first}
           name={"addElementIndex"}
-          disabled={inputIndex ? false : true}
+          onClick={(event) => setElementIndex(event)}
+          disabled={inputIndex && inputValue ? false : true}
         />
         <Button
           text="Удалить по индексу"
           linkedList="big"
           extraClass={styles.button__second}
           name={"removeElementIndex"}
+          onClick={(event) => setElementIndex(event)}
           disabled={inputIndex ? false : true}
         />
       </div>
@@ -313,21 +356,19 @@ export const ListPage: React.FC = () => {
                 <ArrowIcon fill={item.color === ElementStates.Changing ? "#D252E1" : "#0032FF"} />
               ) : null}
               {/* если сработал флаг добавления в начало списка */}
-              {(item.isHeadAdd || item.isTailAdd) && (
+              {(item.isHeadAdd || item.isTailAdd || item.isElementAdd) && (
                 <Circle
                   isSmall
-                  letter={`${item.topCircle.element}`}
-                  key={id}
+                  letter={`${item.topCircle?.element}`}
                   state={ElementStates.Changing}
                   extraClass={styles.top}
                 />
               )}
               {/* если сработал флаг добавления в конец списка */}
-              {(item.isTailRemove || item.isHeadRemove) && (
+              {(item.isTailRemove || item.isHeadRemove || item.isElementRemove) && (
                 <Circle
                   isSmall
-                  letter={`${item.bottomCircle.element}`}
-                  key={id}
+                  letter={`${item.bottomCircle?.element}`}
                   state={ElementStates.Changing}
                   extraClass={styles.bottom}
                 />
