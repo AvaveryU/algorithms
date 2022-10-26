@@ -73,12 +73,10 @@ export const QueuePage: React.FC = () => {
     if (head.index === tail.index) {
       setCheckQueue(true);
       queue.peak();
-      console.log(head);
       arr[head.index] = {
         element: "",
         head: "",
       };
-
       setCheckQueue(false);
     } else {
       queue.dequeue();

@@ -20,3 +20,21 @@
   grid-column-start: 4;
   grid-column-end: 6;
 }
+.circle {
+  margin-top: 120px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.main {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.top {
+  position: absolute;
+  left: 10%;
+  top: -64px;
+}
