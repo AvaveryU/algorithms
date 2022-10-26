@@ -29,45 +29,78 @@ export const ListPage: React.FC = () => {
   };
   const initArray = randomArr();
   const [isValues, setValues] =
-    useState<{ element: any; color: ElementStates; isHeadAdd?: boolean; topCircle?: any }[]>(initArray);
+    useState<{ element: any; color: ElementStates; isHeadAdd?: boolean; isTailAdd?: boolean; topCircle?: any }[]>(
+      initArray
+    );
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
-  const addElementHead = async () => {
+  const addElement = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setFlag(true);
     setInputValue("");
     const arr = [...isValues];
-    list.print();
-    list.insertAt(inputValue, 0); // добавление элемента в начало списка
-    const head = list.getIndex(0);
-    list.print();
-    //0ой элемент в списке
-    arr[0] = {
-      ...arr[0],
-      isHeadAdd: true,
-      topCircle: {
+    if (event.currentTarget.name === "head") {
+      list.insertAt(inputValue, 0); // добавление элемента в начало списка
+      const head = list.getIndex(0);
+      list.print();
+      //0ой элемент в списке
+      arr[0] = {
+        ...arr[0],
+        isHeadAdd: true,
+        topCircle: {
+          element: head ? head : inputValue,
+        },
+      };
+      setValues([...arr]);
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+      //указываем ключи для скрытия добавляемого элемента визуально (topCircle)
+      arr[0] = {
+        ...arr[0],
+        isHeadAdd: false,
+        topCircle: null,
+      };
+      //новый элемент в начале очереди
+      arr.unshift({
         element: head ? head : inputValue,
-      },
-    };
-
-    setValues([...arr]);
-    await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-    //указываем ключи для скрытия добавляемого элемента визуально (topCircle)
-    arr[0] = {
-      ...arr[0],
-      isHeadAdd: false,
-      topCircle: null,
-    };
-    //новый элемент в начале очереди
-    arr.unshift({
-      element: head ? head : inputValue,
-      color: ElementStates.Modified,
-    });
-    setValues([...arr]);
-    await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-    arr[0].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
+        color: ElementStates.Modified,
+      });
+      setValues([...arr]);
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+      arr[0].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
+    }
+    //если нажали на кнопку добавить в tail
+    else if (event.currentTarget.name === "tail") {
+      let index = arr.length - 1;
+      list.insertAt(inputValue, index); // добавление элемента в конец списка
+      const tail = list.getIndex(index);
+      list.print();
+      //последний элемент в списке
+      arr[index] = {
+        ...arr[index],
+        isTailAdd: true,
+        topCircle: {
+          element: tail ? tail : inputValue,
+        },
+      };
+      setValues([...arr]);
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+      //указываем ключи для скрытия добавляемого элемента визуально (topCircle)
+      arr[index] = {
+        ...arr[index],
+        isTailAdd: false,
+        topCircle: null,
+      };
+      //новый элемент в начале очереди
+      arr.push({
+        element: tail ? tail : inputValue,
+        color: ElementStates.Modified,
+      });
+      setValues([...arr]);
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+      arr[index + 1].color = ElementStates.Default; //возвращаем стандартный цвет нового 0го элемента
+    }
     setFlag(false);
     setInputValue("");
   };
@@ -88,11 +121,21 @@ export const ListPage: React.FC = () => {
           text="Добавить в head"
           linkedList="small"
           extraClass={styles.button}
-          onClick={addElementHead}
+          onClick={(event) => addElement(event)}
+          name={`head`}
           isLoader={!flag ? false : true}
           disabled={inputValue ? false : true}
         />
-        <Button text="Добавить в tail" linkedList="small" extraClass={styles.button} />
+        <Button
+          text="Добавить в tail"
+          linkedList="small"
+          extraClass={styles.button}
+          onClick={(event) => addElement(event)}
+          name={`tail`}
+          value={inputValue || ""}
+          isLoader={!flag ? false : true}
+          disabled={inputValue ? false : true}
+        />
         <Button text="Удалить из head" linkedList="small" extraClass={styles.button} />
         <Button text="Удалить из tail" linkedList="small" extraClass={styles.button} />
         <Input placeholder="Введите индекс" type="text" extraClass={styles.frame} maxLength={1} />
@@ -109,12 +152,23 @@ export const ListPage: React.FC = () => {
                 state={item.color}
                 index={index}
                 head={index === 0 && !item.isHeadAdd ? "head" : ""}
-                //tail={item.tail}
+                tail={index === isValues.length - 1 && !item.isTailAdd ? "tail" : ""}
               />
               {index !== isValues.length - 1 ? (
                 <ArrowIcon fill={item.color === ElementStates.Changing ? "#D252E1" : "#0032FF"} />
               ) : null}
+              {/* если сработал флаг добавления в начало списка */}
               {item.isHeadAdd && (
+                <Circle
+                  isSmall
+                  letter={`${item.topCircle.element}`}
+                  key={id}
+                  state={ElementStates.Changing}
+                  extraClass={styles.top}
+                />
+              )}
+              {/* если сработал флаг добавления в конец списка */}
+              {item.isTailAdd && (
                 <Circle
                   isSmall
                   letter={`${item.topCircle.element}`}
