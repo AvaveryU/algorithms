@@ -38,3 +38,8 @@
   left: 10%;
   top: -64px;
 }
+.bottom {
+  position: absolute;
+  left: 10%;
+  bottom: -94px;
+}
