@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { TAIL, HEAD } from "../../constants/element-captions";
 import { ElementStates } from "../../types/element-states";
@@ -17,17 +17,25 @@ type TPropItem = {
 };
 
 export const QueuePage: React.FC = () => {
-  let size = 7;
+  const size = 7;
   const queue = useMemo(() => new Queue<string>(size), []);
   //инициализируем начальный массив
   const container: TPropItem[] = [...queue.container].map(() => ({
     element: "",
     color: ElementStates.Default,
   }));
-  const [inputValue, setInputValue] = useState<string>("");
+  const [inputValue, setInputValue] = useState("");
   const [isValues, setValues] = useState<TPropItem[]>(container); //стейт для отображаемого массива с пустыми начальными значениями
-  const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки
-  const [isCheckQueue, setCheckQueue] = useState<boolean>(false);
+  const [flag, setFlag] = useState(false); //флаг для активной кнопки
+  const [isCheckQueue, setCheckQueue] = useState(false);
+
+  //для очистки асинхронных запросов при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      addElement();
+      deleteElement();
+    };
+  }, []);
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);

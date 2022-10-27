@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
 import { Button } from "../ui/button/button";
@@ -10,11 +10,21 @@ import styles from "./stack-page.module.css";
 export const StackPage: React.FC = () => {
   const [inputValue, setInputValue] = useState<number | string>();
   const [isDigits, setDigits] = useState<{ digit: number | string; color: ElementStates }[]>([]);
-  const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки
+  const [flag, setFlag] = useState(false); //флаг для активной кнопки
+
+  //для очистки асинхронных запросов при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      addElement();
+      deleteElement();
+      resetElements();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(Number(event.target.value));
   };
+
   //функция при клике на кнопку 'Добавить'
   const addElement = async () => {
     setFlag(true);
@@ -38,9 +48,11 @@ export const StackPage: React.FC = () => {
     setDigits([...isDigits]);
     setFlag(false);
   };
+
   const resetElements = () => {
     setDigits([]);
   };
+
   return (
     <SolutionLayout title="Стек">
       <div className={styles.content}>

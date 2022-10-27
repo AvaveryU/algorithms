@@ -51,11 +51,13 @@ export class Queue<T> implements IQueue<T> {
     }
     return { element: this.container[this.head], index: this.head };
   };
+
   checkTail = (): { element: T | null; index: number } => {
     if (this.isEmpty()) {
       throw new Error("Нет элементов в очереди");
     }
     return { element: this.container[this.tail - 1], index: this.tail - 1 };
   };
+
   isEmpty = () => this.length === 0;
 }

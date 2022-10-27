@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
@@ -6,33 +6,24 @@ import styles from "./string.module.css";
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
 import { DELAY_IN_MS } from "../../constants/delays";
+import { swap } from "./utils";
 
 export const StringComponent: React.FC = () => {
-  const [inputString, setInputString] = useState<string>("");
-  const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки
+  const [inputString, setInputString] = useState("");
+  const [flag, setFlag] = useState(false); //флаг для активной кнопки
   const [massivLetter, setMassivLetter] = useState<{ letter: string; color: ElementStates }[]>();
+
+  //очистка асинхронных запросов при размонтировании компонента
+  useEffect(() => {
+    return () => {
+      onExpand();
+    };
+  }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputString(event.target.value);
   };
-  //функция для перестановки символов и замены цвета circle
-  const swap = (
-    arr: { letter: string; color: ElementStates }[],
-    firstIndex: number,
-    secondIndex: number,
-    color: ElementStates
-  ) => {
-    const temp = arr[firstIndex];
-    if (firstIndex <= secondIndex) {
-      arr[firstIndex] = arr[secondIndex];
-      arr[secondIndex] = temp;
-      arr[firstIndex].color = color;
-      arr[secondIndex].color = color;
-    }
-    setMassivLetter([...arr]);
-    arr[firstIndex].color = ElementStates.Modified;
-    arr[secondIndex].color = ElementStates.Modified;
-  };
+
   //функция при клике на кнопку 'Развернуть'
   const onExpand = async () => {
     setFlag(true);
@@ -47,7 +38,8 @@ export const StringComponent: React.FC = () => {
     await new Promise((resolve) => setTimeout(resolve, DELAY_IN_MS)); //пауза для отображения начального импута в визуале
 
     for (let i = start; i <= end; i++) {
-      swap(arr, start, end, ElementStates.Changing);
+      swap(arr, start, end, ElementStates.Changing, setMassivLetter);
+
       await new Promise((resolve) => setTimeout(resolve, DELAY_IN_MS)); //пауза для визуала переключения цвета circle
       start++;
       end--;

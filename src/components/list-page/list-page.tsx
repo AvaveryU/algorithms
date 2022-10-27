@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
+import { TPropItemInList } from "../../types/types";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { ArrowIcon } from "../ui/icons/arrow-icon";
@@ -8,50 +9,20 @@ import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { LinkedList } from "./list";
 import styles from "./list-page.module.css";
-
-type TPropItem = {
-  element: string | number;
-  color: ElementStates;
-  isHeadAdd?: boolean; //флаг добавления в начало списка
-  isTailAdd?: boolean; //флаг добавления в конец списка
-  isTailRemove?: boolean; //флаг удаления с начала списка
-  isHeadRemove?: boolean; //флаг удаления с конца списка
-  isElementAdd?: boolean; //флаг добавления элемента по индексу
-  isElementRemove?: boolean; //флаг удаления элемента по индексу
-  topCircle?:
-    | {
-        element: string;
-      }
-    | undefined; //флаг для визуала элемента сверху списка
-  bottomCircle?:
-    | {
-        element: string;
-      }
-    | undefined; //флаг для визуала элемента снизу списка
-};
+import { randomArr } from "./utils";
 
 export const ListPage: React.FC = () => {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [inputIndex, setInputIndex] = useState<number>();
-  const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки 1
-  const [flagTwo, setFlagTwo] = useState<boolean>(false); //флаг для активной кнопки 2
-  const [flagThree, setFlagThree] = useState<boolean>(false); //флаг для активной кнопки 3
-  const [flagFour, setFlagFour] = useState<boolean>(false); //флаг для активной кнопки 4
+  const [inputValue, setInputValue] = useState("");
+  const [inputIndex, setInputIndex] = useState<number | undefined>();
+  const [flag, setFlag] = useState(false); //флаг для активной кнопки 1
+  const [flagTwo, setFlagTwo] = useState(false); //флаг для активной кнопки 2
+  const [flagThree, setFlagThree] = useState(false); //флаг для активной кнопки 3
+  const [flagFour, setFlagFour] = useState(false); //флаг для активной кнопки 4
 
   const list = new LinkedList<string>();
 
-  //функция рандомного массива
-  const randomArr = () => {
-    let maxLen = 4; // max длина массива
-    let maxNum = 30; // max число в массиве
-    let length = Math.round(Math.random() + maxLen);
-    let max = Math.round(Math.random() * maxNum);
-    return Array.apply(null, Array(length)).map(() => {
-      return { element: Math.round(Math.random() * max), color: ElementStates.Default }; //определенная структура элементов массива
-    });
-  };
   const initArray = randomArr();
-  const [isValues, setValues] = useState<TPropItem[]>(initArray);
+  const [isValues, setValues] = useState<TPropItemInList[]>(initArray);
 
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.placeholder === "Введите текст") {
@@ -337,16 +308,15 @@ export const ListPage: React.FC = () => {
           extraClass={styles.button__second}
           name={"removeElementIndex"}
           onClick={(event) => setElementIndex(event)}
-          disabled={inputIndex ? false : true}
+          disabled={inputIndex && inputIndex < isValues.length ? false : true}
         />
       </div>
       <div className={styles.circle}>
         {isValues.map((item, index) => {
           return (
-            <div className={styles.main}>
+            <div className={styles.main} key={index}>
               <Circle
                 letter={`${item.element}`}
-                key={index}
                 state={item.color}
                 index={index}
                 head={index === 0 && !item.isHeadAdd && !item.isHeadRemove ? "head" : ""}

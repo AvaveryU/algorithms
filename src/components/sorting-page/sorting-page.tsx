@@ -1,53 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { Direction } from "../../types/direction";
 import { ElementStates } from "../../types/element-states";
+import { TPropItem } from "../../types/types";
 import { Button } from "../ui/button/button";
 import { Column } from "../ui/column/column";
 import { RadioInput } from "../ui/radio-input/radio-input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./sorting-page.module.css";
-
-type TPropItem = {
-  num: number;
-  color: ElementStates;
-};
+import { randomArr, swap } from "./utils";
 
 export const SortingPage: React.FC = () => {
-  const [flag, setFlag] = useState<boolean>(false); //флаг для активной кнопки
+  const [flag, setFlag] = useState(false); //флаг для активной кнопки
   const [massiv, setMassiv] = useState<TPropItem[]>();
-  const [isChecked, setChecked] = useState<boolean>(true); //флаг для активной радиокнопки
-  //функция рандомного массива
-  const randomArr = () => {
-    let minLen = 3;
-    let maxLen = 17; // max длина массива
-    let minNum = 0;
-    let maxNum = 100; // max число в массиве
+  const [isChecked, setChecked] = useState(true); //флаг для активной радиокнопки
 
-    let length = Math.round(Math.random() * (maxLen - minLen) + minLen);
-    let max = Math.round(Math.random() * (maxNum - minNum) + minNum);
+  //для очистки асинхронных запросов при размонтировании компонента
+  useEffect(() => {
+    setMassiv([...randomArr()]);
+    return () => {
+      sortMassiveIncrement();
+      sortMassiveDecrement();
+    };
+  }, []);
 
-    return Array.apply(null, Array(length)).map(() => {
-      return { num: Math.round(Math.random() * max), color: ElementStates.Default }; //определенная структура элементов массива
-    });
-  };
   //функция при клике на "Новый массив"
   const getNewMassive = () => {
-    let randomMassiv = randomArr();
-    setMassiv(randomMassiv);
-  };
-
-  //функция для перестановки элементов массива и замены цвета circle
-  const swap = (arr: TPropItem[], firstIndex: number, secondIndex: number, color: ElementStates) => {
-    const temp = arr[firstIndex].num;
-    arr[firstIndex].num = arr[secondIndex].num;
-    arr[secondIndex].num = temp;
-    arr[firstIndex].color = color;
-    arr[secondIndex].color = color;
-
-    setMassiv([...arr]);
-    arr[firstIndex].color = ElementStates.Modified;
-    arr[secondIndex].color = ElementStates.Modified;
+    setMassiv([...randomArr()]);
   };
 
   //сортировка по возрастанию
@@ -65,7 +44,7 @@ export const SortingPage: React.FC = () => {
             }
           }
           await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-          swap(massiv, minInd, i, ElementStates.Changing);
+          swap(massiv, minInd, i, ElementStates.Changing, setMassiv);
         }
         massiv[length - 1].color = ElementStates.Modified;
       }
@@ -75,7 +54,7 @@ export const SortingPage: React.FC = () => {
           for (let j = 0; j < length - i - 1; j++) {
             if (massiv[j].num > massiv[j + 1].num) {
               await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-              swap(massiv, j, j + 1, ElementStates.Changing);
+              swap(massiv, j, j + 1, ElementStates.Changing, setMassiv);
             }
           }
         }
@@ -99,7 +78,7 @@ export const SortingPage: React.FC = () => {
             }
           }
           await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-          swap(massiv, i, maxInd, ElementStates.Changing);
+          swap(massiv, i, maxInd, ElementStates.Changing, setMassiv);
         }
       } //если выбран метод сортировки ПУЗЫРЕК
       else {
@@ -107,7 +86,7 @@ export const SortingPage: React.FC = () => {
           for (let j = 0; j < length - i - 1; j++) {
             if (massiv[j].num < massiv[j + 1].num) {
               await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-              swap(massiv, j, j + 1, ElementStates.Changing);
+              swap(massiv, j, j + 1, ElementStates.Changing, setMassiv);
             }
           }
         }
