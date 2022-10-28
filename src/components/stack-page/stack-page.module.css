@@ -1,0 +1,19 @@
+.content {
+  composes: content from "../string/string.module.css";
+  flex-wrap: wrap;
+}
+.frame {
+  order: 0;
+  max-width: 377px;
+}
+.button {
+  margin-left: 12px;
+  max-width: 121px;
+}
+.clear {
+  composes: button;
+  margin-left: 80px;
+}
+.circle {
+  composes: circle from "../string/string.module.css";
+}

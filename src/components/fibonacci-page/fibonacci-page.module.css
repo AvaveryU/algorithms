@@ -1,0 +1,12 @@
+.content {
+  composes: content from "../string/string.module.css";
+}
+.frame {
+  composes: frame from "../string/string.module.css";
+}
+.circle {
+  composes: circle from "../string/string.module.css";
+  grid-template-columns: repeat(10, 80px);
+  margin-top: 48px;
+  row-gap: 48px;
+}

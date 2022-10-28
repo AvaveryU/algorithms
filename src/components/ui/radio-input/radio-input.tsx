@@ -7,16 +7,12 @@ interface RadioProps extends React.HTMLProps<HTMLInputElement> {
   extraClass?: string;
 }
 
-export const RadioInput: React.FC<RadioProps> = ({
-  label = "Введите текст",
-  extraClass = "",
-  ...rest
-}) => {
+export const RadioInput: React.FC<RadioProps> = ({ label = "Введите текст", extraClass = "", ...rest }) => {
   const id = nanoid();
 
   return (
     <div className={`${styles.content} ${extraClass}`}>
-      <input className={styles.input} type="radio" id={id} {...rest} />
+      <input className={styles.input} type="radio" {...rest} id={id} />
       <label className={`text text_type_button ${styles.label}`} htmlFor={id}>
         {label}
       </label>
