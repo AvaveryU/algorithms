@@ -1,6 +1,7 @@
 {
   "name": "algorithms-project",
   "version": "0.1.0",
+  "homepage": "./",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
@@ -10,6 +11,8 @@
     "@types/node": "^16.11.22",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "build": "^0.1.4",
+    "gh-pages": "^4.0.0",
     "nanoid": "^3.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
