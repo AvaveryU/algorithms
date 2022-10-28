@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 import { ElementStates } from "../../types/element-states";
+import { TPropItemInStack } from "../../types/types";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
+import { Stack } from "./stack";
 import styles from "./stack-page.module.css";
 
 export const StackPage: React.FC = () => {
-  const [inputValue, setInputValue] = useState<number | string>();
-  const [isDigits, setDigits] = useState<{ digit: number | string; color: ElementStates }[]>([]);
+  const [inputValue, setInputValue] = useState<number | string>("");
+  const [isDigits, setDigits] = useState<TPropItemInStack[]>([]);
   const [flag, setFlag] = useState(false); //флаг для активной кнопки
+  const st = useMemo(() => new Stack<TPropItemInStack>(), []);
 
   //для очистки асинхронных запросов при размонтировании компонента
   useEffect(() => {
@@ -29,12 +32,12 @@ export const StackPage: React.FC = () => {
   const addElement = async () => {
     setFlag(true);
     setInputValue("");
-    if (inputValue) {
-      isDigits.push({ digit: inputValue, color: ElementStates.Changing });
-      setDigits([...isDigits]);
-      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-      isDigits[isDigits.length - 1].color = ElementStates.Default; // цвет последнего элемента в стэке
-    }
+    st.push({ digit: inputValue, color: ElementStates.Changing });
+    const container = st.getElements(); // вернули массив элементов
+    setDigits([...container]);
+    await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+    const lastElement = st.peak();
+    if (lastElement) lastElement.color = ElementStates.Default; // цвет последнего элемента в стэке
     setFlag(false);
   };
 
@@ -42,15 +45,17 @@ export const StackPage: React.FC = () => {
   const deleteElement = async () => {
     setFlag(true);
     setInputValue("");
-    isDigits[isDigits.length - 1].color = ElementStates.Changing; // цвет последнего элемента в стэке
+    const lastElement = st.peak();
+    if (lastElement) lastElement.color = ElementStates.Changing; // цвет последнего элемента в стэке
     await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
-    isDigits.pop();
-    setDigits([...isDigits]);
+    st.pop();
+    const container = st.getElements();
+    setDigits([...container]);
     setFlag(false);
   };
 
   const resetElements = () => {
-    setDigits([]);
+    setDigits([...st.clear()]);
   };
 
   return (

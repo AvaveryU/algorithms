@@ -5,6 +5,11 @@ export type TPropItem = {
   color: ElementStates;
 };
 
+export type TPropItemInStack = {
+  digit: number | string;
+  color: ElementStates;
+};
+
 export type TPropItemInList = {
   element: string | number;
   color: ElementStates;
