@@ -1,5 +1,4 @@
-//тест роутинга
-describe("app works correctly with routes", () => {
+describe("открытие старницы СТРОКА", () => {
   before(() => {
     cy.visit("/recursion");
   });
