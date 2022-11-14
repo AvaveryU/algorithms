@@ -1,4 +1,4 @@
-//тест роутинга
+//тестирование роутинга
 describe("app works correctly with routes", () => {
   beforeEach(() => {
     cy.visit("/");
