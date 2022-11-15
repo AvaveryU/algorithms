@@ -1,4 +1,4 @@
-describe("page string display correctly", () => {
+describe("page fibonacci display correctly", () => {
   before(() => {
     cy.visit("/fibonacci");
   });
