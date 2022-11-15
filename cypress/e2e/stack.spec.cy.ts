@@ -21,7 +21,7 @@ describe("page stack display correctly", () => {
 
   it("click button and number add correсtly and clear input field", () => {
     cy.get("button").contains("Добавить").click();
-    cy.get('input[type="text"]').type(`${undefined}`); //пустое поле
+    cy.get('input[type="text"]').clear(); //пустое поле
     cy.get('[class^="circle_circle"]').should("have.length", 1).contains(30);
     cy.get('[class^="circle_circle"]').should("have.css", "border", "4px solid rgb(210, 82, 225)");
 
@@ -49,7 +49,7 @@ describe("page stack display correctly", () => {
         if (index === 0) cy.wrap($div).should("have.css", "border", "4px solid rgb(0, 50, 255)").contains(30);
         if (index === 1) cy.wrap($div).should("have.css", "border", "4px solid rgb(210, 82, 225)").contains(666);
       });
-    cy.get('input[type="text"]').type(`${undefined}`); //пустое поле
+    cy.get('input[type="text"]').clear(); //пустое поле
 
     cy.wait(500);
 
@@ -90,7 +90,7 @@ describe("page stack display correctly", () => {
         if (index === 0) cy.wrap($div).should("have.css", "border", "4px solid rgb(0, 50, 255)").contains(30);
         if (index === 1) cy.wrap($div).should("have.css", "border", "4px solid rgb(210, 82, 225)").contains(55);
       });
-    cy.get('input[type="text"]').type(`${undefined}`); //пустое поле
+    cy.get('input[type="text"]').clear(); //пустое поле
 
     cy.wait(500);
 
@@ -117,7 +117,7 @@ describe("page stack display correctly", () => {
 
   it("repeat click button and number add correсtly and clear input field", () => {
     cy.get("button").contains("Добавить").click();
-    cy.get('input[type="text"]').type(`${undefined}`); //пустое поле
+    cy.get('input[type="text"]').clear(); //пустое поле
     cy.get('[class^="circle_circle"]').should("have.length", 1).contains(4);
     cy.get('[class^="circle_circle"]').should("have.css", "border", "4px solid rgb(210, 82, 225)");
 
