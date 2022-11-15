@@ -39,11 +39,10 @@ export const StringComponent: React.FC = () => {
 
     for (let i = start; i <= end; i++) {
       swap(arr, start, end, ElementStates.Changing, setMassivLetter);
-
+      setMassivLetter([...arr]);
       await new Promise((resolve) => setTimeout(resolve, DELAY_IN_MS)); //пауза для визуала переключения цвета circle
       start++;
       end--;
-      setMassivLetter([...arr]);
     }
     setFlag(false);
   };
