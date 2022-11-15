@@ -8,7 +8,7 @@ describe("page string display correctly", () => {
     cy.get('input[type="text"]').should("have.length", 1);
     cy.get('input[type="text"]').should("be.empty");
 
-    cy.get("button").should("be.disabled"); //кнопка неактивна
+    cy.get("button").should("be.disabled").contains("Развернуть"); //кнопка неактивна
   });
 
   it("write a string in input field", () => {
