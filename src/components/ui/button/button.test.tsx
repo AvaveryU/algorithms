@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import { Button } from "./button";
 
 describe("render component Button", () => {
@@ -8,15 +8,18 @@ describe("render component Button", () => {
   });
 
   it("компонент Button c пропсом text", () => {
-    render(<Button text="test" />);
+    const component = render(<Button text="test" />);
+    expect(component).toMatchSnapshot();
   });
 
   it("компонент Button c пропсом disabled", () => {
-    render(<Button disabled />);
+    const component = render(<Button disabled />);
+    expect(component).toMatchSnapshot();
   });
 
   it("компонент Button c пропсом isLoader", () => {
-    render(<Button isLoader />);
+    const component = render(<Button isLoader />);
+    expect(component).toMatchSnapshot();
   });
 
   it("срабатывает событие onClick", () => {
