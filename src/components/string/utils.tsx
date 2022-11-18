@@ -6,8 +6,7 @@ export const swap = async (
   arr: { letter: string; color: ElementStates }[],
   firstIndex: number,
   secondIndex: number,
-  color: ElementStates,
-  setState: any
+  color: ElementStates
 ) => {
   const temp = arr[firstIndex];
   //изменяем цвет circle, с которыми производим действие
@@ -19,7 +18,7 @@ export const swap = async (
     arr[firstIndex] = arr[secondIndex];
     arr[secondIndex] = temp;
   }
-  setState([...arr]);
   arr[firstIndex].color = ElementStates.Modified;
   arr[secondIndex].color = ElementStates.Modified;
+  return arr;
 };

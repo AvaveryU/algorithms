@@ -31,18 +31,18 @@ export const StringComponent: React.FC = () => {
     let arr = massiv.map((item) => {
       return { letter: item, color: ElementStates.Default };
     });
+
     let start = 0;
     let end = arr.length - 1;
-
     setMassivLetter([...arr]);
     await new Promise((resolve) => setTimeout(resolve, DELAY_IN_MS)); //пауза для отображения начального импута в визуале
-
     for (let i = start; i <= end; i++) {
-      swap(arr, start, end, ElementStates.Changing, setMassivLetter);
+      swap(arr, start, end, ElementStates.Changing);
       setMassivLetter([...arr]);
       await new Promise((resolve) => setTimeout(resolve, DELAY_IN_MS)); //пауза для визуала переключения цвета circle
       start++;
       end--;
+      setMassivLetter([...arr]);
     }
     setFlag(false);
   };
@@ -58,6 +58,7 @@ export const StringComponent: React.FC = () => {
           isLimitText
           onChange={handleChange}
           value={inputString}
+          data-testid="input"
         />
         <Button
           text="Развернуть"
@@ -65,9 +66,10 @@ export const StringComponent: React.FC = () => {
           onClick={onExpand}
           disabled={inputString !== `` ? false : true}
           isLoader={!flag ? false : true}
+          data-testid="button"
         />
       </div>
-      <div className={styles.circle}>
+      <div className={styles.circle} data-testid="circles">
         {massivLetter &&
           massivLetter.map((item, index) => {
             return <Circle letter={item.letter} key={index} state={item.color} />;
