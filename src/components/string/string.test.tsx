@@ -2,6 +2,7 @@ import { fireEvent, getByTestId, render, waitFor } from "@testing-library/react"
 import { StringComponent } from "./string";
 import { BrowserRouter as Router } from "react-router-dom";
 
+jest.setTimeout(10000);
 describe("Тестирование алгоритма разворота строки", () => {
   it("Корректно разворачивает строку с четным количеством символов", async () => {
     // Рендерим компонент

@@ -8,11 +8,11 @@ import { Column } from "../ui/column/column";
 import { RadioInput } from "../ui/radio-input/radio-input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./sorting-page.module.css";
-import { randomArr, swap } from "./utils";
+import { randomArr, sortOnDecrement, sortOnIncrement, swap } from "./utils";
 
 export const SortingPage: React.FC = () => {
-  const [flag, setFlag] = useState(false); //флаг для активной кнопки
-  const [massiv, setMassiv] = useState<TPropItem[]>();
+  //const [flag, setFlag] = useState(false); //флаг для активной кнопки
+  const [massiv, setMassiv] = useState<TPropItem[]>([]);
   const [isChecked, setChecked] = useState(true); //флаг для активной радиокнопки
 
   //для очистки асинхронных запросов при размонтировании компонента
@@ -31,68 +31,22 @@ export const SortingPage: React.FC = () => {
 
   //сортировка по возрастанию
   const sortMassiveIncrement = async () => {
-    setFlag(true);
+    //setFlag(true);
     if (massiv) {
-      const { length } = massiv;
-      //если выбран метод сортировки ВЫБОР
-      if (isChecked) {
-        for (let i = 0; i < length - 1; i++) {
-          let minInd = i;
-          for (let q = i + 1; q < length; q++) {
-            if (massiv[q].num < massiv[minInd].num) {
-              minInd = q;
-            }
-          }
-          await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-          swap(massiv, minInd, i, ElementStates.Changing, setMassiv);
-        }
-        massiv[length - 1].color = ElementStates.Modified;
-      }
-      //если выбран метод сортировки ПУЗЫРЕК
-      else {
-        for (let i = 0; i < length; i++) {
-          for (let j = 0; j < length - i - 1; j++) {
-            if (massiv[j].num > massiv[j + 1].num) {
-              await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-              swap(massiv, j, j + 1, ElementStates.Changing, setMassiv);
-            }
-          }
-        }
-      }
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+      sortOnIncrement(massiv, isChecked, setMassiv);
     }
-    setFlag(false);
+    // setFlag(false);
   };
 
   //сортировка по убыванию
   const sortMassiveDecrement = async () => {
-    setFlag(true);
+    //setFlag(true);
     if (massiv) {
-      const { length } = massiv;
-      //если выбран метод сортировки ВЫБОР
-      if (isChecked) {
-        for (let i = 0; i < length - 1; i++) {
-          let maxInd = i;
-          for (let q = i + 1; q < length; q++) {
-            if (massiv[q].num > massiv[maxInd].num) {
-              maxInd = q;
-            }
-          }
-          await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-          swap(massiv, i, maxInd, ElementStates.Changing, setMassiv);
-        }
-      } //если выбран метод сортировки ПУЗЫРЕК
-      else {
-        for (let i = 0; i < length; i++) {
-          for (let j = 0; j < length - i - 1; j++) {
-            if (massiv[j].num < massiv[j + 1].num) {
-              await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS)); //пауза для визуализации
-              swap(massiv, j, j + 1, ElementStates.Changing, setMassiv);
-            }
-          }
-        }
-      }
+      await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
+      sortOnDecrement(massiv, isChecked, setMassiv);
     }
-    setFlag(false);
+    //setFlag(false);
   };
 
   const onChange = () => {
@@ -129,7 +83,7 @@ export const SortingPage: React.FC = () => {
           linkedList="small"
           extraClass={styles.massive}
           onClick={getNewMassive}
-          disabled={flag ? true : false}
+          //disabled={flag ? true : false}
         />
       </div>
       <div className={styles.circle}>
