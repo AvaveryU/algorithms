@@ -11,7 +11,7 @@ export const sortOnIncrement = async (
 ) => {
   const { length } = arr;
   //если выбран метод сортировки ВЫБОР
-  if (isChecked) {
+  if (isChecked && length !== 0) {
     for (let i = 0; i < length - 1; i++) {
       let minInd = i;
       for (let q = i + 1; q < length; q++) {
@@ -34,6 +34,7 @@ export const sortOnIncrement = async (
       }
     }
   }
+  if (length >= 1) arr[0].color = ElementStates.Modified;
   if (setMassiv) setMassiv([...arr]);
   return arr;
 };
@@ -45,7 +46,7 @@ export const sortOnDecrement = async (
 ) => {
   const { length } = arr;
   //если выбран метод сортировки ВЫБОР
-  if (isChecked) {
+  if (isChecked && length !== 0) {
     for (let i = 0; i < length - 1; i++) {
       let maxInd = i;
       for (let q = i + 1; q < length; q++) {
@@ -57,7 +58,7 @@ export const sortOnDecrement = async (
       swap(arr, i, maxInd, ElementStates.Changing, setMassiv);
     }
   } //если выбран метод сортировки ПУЗЫРЕК
-  else {
+  else if (!isChecked) {
     for (let i = 0; i < length; i++) {
       for (let j = 0; j < length - i - 1; j++) {
         if (arr[j].num < arr[j + 1].num) {
@@ -67,6 +68,7 @@ export const sortOnDecrement = async (
       }
     }
   }
+  if (length >= 1) arr[0].color = ElementStates.Modified;
   if (setMassiv) setMassiv([...arr]);
   return arr;
 };

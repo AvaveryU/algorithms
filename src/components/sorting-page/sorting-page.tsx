@@ -8,10 +8,10 @@ import { Column } from "../ui/column/column";
 import { RadioInput } from "../ui/radio-input/radio-input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import styles from "./sorting-page.module.css";
-import { randomArr, sortOnDecrement, sortOnIncrement, swap } from "./utils";
+import { randomArr, sortOnDecrement, sortOnIncrement } from "./utils";
 
 export const SortingPage: React.FC = () => {
-  //const [flag, setFlag] = useState(false); //флаг для активной кнопки
+  const [flag, setFlag] = useState(false); //флаг для активной кнопки
   const [massiv, setMassiv] = useState<TPropItem[]>([]);
   const [isChecked, setChecked] = useState(true); //флаг для активной радиокнопки
 
@@ -31,22 +31,21 @@ export const SortingPage: React.FC = () => {
 
   //сортировка по возрастанию
   const sortMassiveIncrement = async () => {
-    //setFlag(true);
+    setFlag(true);
     if (massiv) {
       await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
       sortOnIncrement(massiv, isChecked, setMassiv);
     }
-    // setFlag(false);
+    setFlag(false);
   };
-
   //сортировка по убыванию
   const sortMassiveDecrement = async () => {
-    //setFlag(true);
+    setFlag(true);
     if (massiv) {
       await new Promise((resolve) => setTimeout(resolve, SHORT_DELAY_IN_MS));
       sortOnDecrement(massiv, isChecked, setMassiv);
     }
-    //setFlag(false);
+    setFlag(false);
   };
 
   const onChange = () => {
@@ -83,7 +82,7 @@ export const SortingPage: React.FC = () => {
           linkedList="small"
           extraClass={styles.massive}
           onClick={getNewMassive}
-          //disabled={flag ? true : false}
+          disabled={flag ? true : false}
         />
       </div>
       <div className={styles.circle}>
