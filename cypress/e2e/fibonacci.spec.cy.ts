@@ -1,3 +1,6 @@
+import { CIRCLE_CIRCLE, INPUT_TEXT, BUTTON } from "../../src/constants/test";
+import { ElementStates } from "../../src/types/element-states";
+
 describe("page fibonacci display correctly", () => {
   before(() => {
     cy.visit("/fibonacci");
@@ -5,46 +8,44 @@ describe("page fibonacci display correctly", () => {
 
   it("page has input field and disabled button", () => {
     //проверка существования поля ввода и пустое ли оно.
-    cy.get('input[type="text"]').should("have.value", "");
-    cy.get('input[type="text"]').should("be.empty");
-
-    cy.get("button").should("be.disabled").contains("Рассчитать"); //кнопка неактивна
+    cy.get(INPUT_TEXT).should("have.value", "");
+    cy.get(INPUT_TEXT).should("be.empty");
+    cy.get(BUTTON).should("be.disabled").contains("Рассчитать"); //кнопка неактивна
   });
 
   it("write a number in input field", () => {
-    cy.get('input[type="text"]').type(`${5}`); //цифра для проверки
-    cy.get("button").should("be.enabled"); // кнопка становится активной
+    cy.get(INPUT_TEXT).type(`${5}`); //цифра для проверки
+    cy.get(BUTTON).should("be.enabled"); // кнопка становится активной
   });
 
   it("click button and number calculate correсtly", () => {
-    cy.get("button").contains("Рассчитать").click();
-
-    cy.get('[class^="circle_circle"]').should("have.length", 1).contains(1);
+    cy.get(BUTTON).contains("Рассчитать").click();
     cy.wait(500);
+    cy.get(CIRCLE_CIRCLE).should("have.length", 1).contains(1);
 
-    cy.get('[class^="circle_circle"]')
+    cy.get(CIRCLE_CIRCLE)
       .should("have.length", 2)
       .each(($div, index) => {
-        $div.hasClass("default"); //дефолтный цвет
+        $div.hasClass(ElementStates.Default); //дефолтный цвет
         if (index === 0) cy.wrap($div).contains(1);
         if (index === 1) cy.wrap($div).contains(1);
       });
     cy.wait(500);
 
-    cy.get('[class^="circle_circle"]')
+    cy.get(CIRCLE_CIRCLE)
       .should("have.length", 3)
       .each(($div, index) => {
-        $div.hasClass("default"); //дефолтный цвет
+        $div.hasClass(ElementStates.Default); //дефолтный цвет
         if (index === 0) cy.wrap($div).contains(1);
         if (index === 1) cy.wrap($div).contains(1);
         if (index === 2) cy.wrap($div).contains(2);
       });
     cy.wait(500);
 
-    cy.get('[class^="circle_circle"]')
+    cy.get(CIRCLE_CIRCLE)
       .should("have.length", 4)
       .each(($div, index) => {
-        $div.hasClass("default"); //дефолтный цвет
+        $div.hasClass(ElementStates.Default); //дефолтный цвет
         if (index === 0) cy.wrap($div).contains(1);
         if (index === 1) cy.wrap($div).contains(1);
         if (index === 2) cy.wrap($div).contains(2);
@@ -52,22 +53,22 @@ describe("page fibonacci display correctly", () => {
       });
     cy.wait(500);
 
-    cy.get('[class^="circle_circle"]')
+    cy.get(CIRCLE_CIRCLE)
       .should("have.length", 5)
       .each(($div, index) => {
-        $div.hasClass("default"); //дефолтный цвет
+        $div.hasClass(ElementStates.Default); //дефолтный цвет
         if (index === 0) cy.wrap($div).contains(1);
         if (index === 1) cy.wrap($div).contains(1);
         if (index === 2) cy.wrap($div).contains(2);
         if (index === 3) cy.wrap($div).contains(3);
         if (index === 4) cy.wrap($div).contains(5);
       });
-    cy.wait(500);
+    cy.wait(1000);
 
-    cy.get('[class^="circle_circle"]')
+    cy.get(CIRCLE_CIRCLE)
       .should("have.length", 6)
       .each(($div, index) => {
-        $div.hasClass("default"); //дефолтный цвет
+        $div.hasClass(ElementStates.Default); //дефолтный цвет
         if (index === 0) cy.wrap($div).contains(1);
         if (index === 1) cy.wrap($div).contains(1);
         if (index === 2) cy.wrap($div).contains(2);

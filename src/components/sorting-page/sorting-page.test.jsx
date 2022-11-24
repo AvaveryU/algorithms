@@ -3,6 +3,14 @@ import { ElementStates } from "../../types/element-states";
 import { BrowserRouter as Router } from "react-router-dom";
 import { SortingPage } from "./sorting-page";
 import { sortOnIncrement, sortOnDecrement } from "./utils";
+import {
+  massivLong,
+  massivEmpty,
+  outMassivLong,
+  massivShort,
+  outMassivShort,
+  outMassivDecrement,
+} from "../../constants/test";
 
 describe("Тестирование алгоритмов сортировки выбором и пузырьком по возрастанию", () => {
   beforeEach(() => {
@@ -13,32 +21,18 @@ describe("Тестирование алгоритмов сортировки в�
     );
   });
   it("Корректно сортирует массив из нескольких элементов по возрастанию", async () => {
-    const massiv = [
-      { num: 8, color: ElementStates.Default },
-      { num: 3, color: ElementStates.Default },
-      { num: 5, color: ElementStates.Default },
-    ];
-    const outMassiv = [
-      { num: 3, color: ElementStates.Modified },
-      { num: 5, color: ElementStates.Modified },
-      { num: 8, color: ElementStates.Modified },
-    ];
-    expect(await sortOnIncrement(massiv, true)).toEqual(outMassiv);
-    expect(await sortOnIncrement(massiv, false)).toEqual(outMassiv);
+    expect(await sortOnIncrement(massivLong, true)).toEqual(outMassivLong);
+    expect(await sortOnIncrement(massivLong, false)).toEqual(outMassivLong);
   });
 
   it("Корректно сортирует пустой массив по возрастанию", async () => {
-    const massiv = [];
-    const outMassiv = [];
-    expect(await sortOnIncrement(massiv, true)).toEqual(outMassiv);
-    expect(await sortOnIncrement(massiv, false)).toEqual(outMassiv);
+    expect(await sortOnIncrement(massivEmpty, true)).toEqual(massivEmpty);
+    expect(await sortOnIncrement(massivEmpty, false)).toEqual(massivEmpty);
   });
 
   it("Корректно сортирует массив из одного элемента по возрастанию", async () => {
-    const massiv = [{ num: 4, color: ElementStates.Default }];
-    const outMassiv = [{ num: 4, color: ElementStates.Modified }];
-    expect(await sortOnIncrement(massiv, true)).toEqual(outMassiv);
-    expect(await sortOnIncrement(massiv, false)).toEqual(outMassiv);
+    expect(await sortOnIncrement(massivShort, true)).toEqual(outMassivShort);
+    expect(await sortOnIncrement(massivShort, false)).toEqual(outMassivShort);
   });
 });
 describe("Тестирование алгоритмов сортировки выбором и пузырьком по убыванию", () => {
@@ -50,31 +44,17 @@ describe("Тестирование алгоритмов сортировки в�
     );
   });
   it("Корректно сортирует массив из нескольких элементов по убыванию", async () => {
-    const massiv = [
-      { num: 8, color: ElementStates.Default },
-      { num: 3, color: ElementStates.Default },
-      { num: 5, color: ElementStates.Default },
-    ];
-    const outMassiv = [
-      { num: 8, color: ElementStates.Modified },
-      { num: 5, color: ElementStates.Modified },
-      { num: 3, color: ElementStates.Modified },
-    ];
-    expect(await sortOnDecrement(massiv, true)).toEqual(outMassiv);
-    expect(await sortOnDecrement(massiv, false)).toEqual(outMassiv);
+    expect(await sortOnDecrement(massivLong, true)).toEqual(outMassivDecrement);
+    expect(await sortOnDecrement(massivLong, false)).toEqual(outMassivDecrement);
   });
 });
 
 it("Корректно сортирует пустой массив по убыванию", async () => {
-  const massiv = [];
-  const outMassiv = [];
-  expect(await sortOnDecrement(massiv, true)).toEqual(outMassiv);
-  expect(await sortOnDecrement(massiv, false)).toEqual(outMassiv);
+  expect(await sortOnDecrement(massivEmpty, true)).toEqual(massivEmpty);
+  expect(await sortOnDecrement(massivEmpty, false)).toEqual(massivEmpty);
 });
 
 it("Корректно сортирует массив из одного элемента по убыванию", async () => {
-  const massiv = [{ num: 4, color: ElementStates.Default }];
-  const outMassiv = [{ num: 4, color: ElementStates.Modified }];
-  expect(await sortOnDecrement(massiv, true)).toEqual(outMassiv);
-  expect(await sortOnDecrement(massiv, false)).toEqual(outMassiv);
+  expect(await sortOnDecrement(massivShort, true)).toEqual(outMassivShort);
+  expect(await sortOnDecrement(massivShort, false)).toEqual(outMassivShort);
 });
