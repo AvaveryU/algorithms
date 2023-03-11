@@ -13,7 +13,7 @@ import { randomArr } from "./utils";
 
 export const ListPage: React.FC = () => {
   const [inputValue, setInputValue] = useState("");
-  const [inputIndex, setInputIndex] = useState<number | undefined>();
+  const [inputIndex, setInputIndex] = useState<number>();
   const [flag, setFlag] = useState(false); //флаг для активной кнопки 1
   const [flagTwo, setFlagTwo] = useState(false); //флаг для активной кнопки 2
   const [flagThree, setFlagThree] = useState(false); //флаг для активной кнопки 3
@@ -175,10 +175,11 @@ export const ListPage: React.FC = () => {
     //если нажали добавить по индексу
     if (event.currentTarget?.name === "addElementIndex" && inputIndex) {
       setFlagFour(true);
-      while (start <= inputIndex) {
+      while (start < inputIndex) {
         // элемент в списке по индексу
         arr[start] = {
           ...arr[start],
+          element: arr[start]?.element ?? '',
           isElementAdd: true,
           topCircle: {
             element: inputValue ? inputValue : "",
