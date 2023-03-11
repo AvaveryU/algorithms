@@ -4,7 +4,7 @@
 
 Проект сделан в соответствии с дизайно по [макету](https://www.figma.com/file/RIkypcTQN5d37g7RRTFid0/Algososh_external_link?node-id=0%3A1) в Figma.
 
-Ссылка на [GH-Page](https://avaveryu.github.io/algorithms/index.html)
+Ссылка на [Vercel](https://algorithms-r17g76p0v-avaveryu.vercel.app/)
 
 ## Строка
 
